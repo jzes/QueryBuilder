@@ -1,4 +1,4 @@
-namespace QueryBuilder
+namespace ModelSQLBuilder
 {
     public static class PostgreTypes
     {

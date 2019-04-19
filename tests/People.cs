@@ -1,5 +1,5 @@
 using System;
-using QueryBuilder;
+using ModelSQLBuilder;
 
 namespace tests
 {

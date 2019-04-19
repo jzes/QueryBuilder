@@ -1,6 +1,6 @@
 using System;
 
-namespace QueryBuilder
+namespace ModelSQLBuilder
 {
     public class DataConverter
     {
