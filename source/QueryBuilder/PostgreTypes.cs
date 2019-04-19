@@ -1,4 +1,4 @@
-namespace AtributeTest
+namespace QueryBuilder
 {
     public static class PostgreTypes
     {

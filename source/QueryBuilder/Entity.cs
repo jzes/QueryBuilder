@@ -1,6 +1,6 @@
 using System;
 
-namespace AtributeTest
+namespace QueryBuilder
 {
 
     [AttributeUsage(AttributeTargets.Class)  ] 

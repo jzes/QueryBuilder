@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using AtributeTest.QueryBuilder;
+using QueryBuilder;
 
-namespace AtributeTest
+namespace QueryBuilder
 {
     public class ModelBase
     {
