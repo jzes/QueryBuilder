@@ -1,6 +1,6 @@
 using System;
 
-namespace AtributeTest
+namespace ModelSQLBuilder
 {
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)  ] 
     public class Field: Attribute

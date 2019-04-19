@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using AtributeTest.QueryBuilder;
 
-namespace AtributeTest
+namespace ModelSQLBuilder
 {
     public class ModelBase
     {

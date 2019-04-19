@@ -1,6 +1,6 @@
 using System;
 
-namespace AtributeTest.QueryBuilder
+namespace ModelSQLBuilder
 {
     public class DataConverter
     {
@@ -8,6 +8,9 @@ namespace AtributeTest.QueryBuilder
             var typeObject = objectToConvert.GetType();
             if(objectToConvert is DateTime){
                 return dateTimeConvert(objectToConvert);
+            }
+            else if(objectToConvert is Double){
+                return doubleConvert(objectToConvert);
             }else{
                 return objectToConvert.ToString();
             }

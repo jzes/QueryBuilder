@@ -1,4 +1,4 @@
-namespace AtributeTest
+namespace ModelSQLBuilder
 {
     public static class PostgreTypes
     {
