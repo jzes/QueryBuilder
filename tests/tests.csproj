@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <ItemGroup>
-    <ProjectReference Include="..\source\QueryBuilder\QueryBuilder.csproj" />
+    <ProjectReference Include="..\source\ModelSQLBuilder\QueryBuilder.csproj" />
   </ItemGroup>
   <PropertyGroup>
     <OutputType>Exe</OutputType>
