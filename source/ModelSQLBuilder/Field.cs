@@ -8,6 +8,7 @@ namespace ModelSQLBuilder
         public string Nome {get; set;}
         public string Type {get; set;}
         public string Value {get; set;}
+        public bool IsKey {get; set;}
         public Field(string nome){
             this.Nome = nome;
         }
