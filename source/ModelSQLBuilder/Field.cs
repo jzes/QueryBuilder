@@ -16,5 +16,10 @@ namespace ModelSQLBuilder
             this.Nome = nome;
             this.Type = type;
         }
+        public Field(string nome, string type, bool IsKey){
+            this.Nome = nome;
+            this.Type = type;
+            this.IsKey = IsKey;
+        }
     }
 }

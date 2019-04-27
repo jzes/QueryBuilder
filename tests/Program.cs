@@ -8,7 +8,8 @@ namespace tests
         {
             var johnDoe = new People();
             johnDoe.FirstName = "John";
-            johnDoe.LastName = "Doe";
+            johnDoe.LastName = "Snow";
+            johnDoe.Document = "123456";
             johnDoe.Age = 28;
             johnDoe.BirdDate = DateTime.Now;
             johnDoe.Value = 2300.50;

@@ -11,6 +11,23 @@ namespace ModelSQLBuilder
         private Entity entity;
         private List<Field> fields;
         private List<string> commaTypes = new List<string>{PostgreTypes.STRING, PostgreTypes.DATETIME};
+        private List<Field> KeyFields;
+
+        private string BuildWhere(){
+            var stringBuider = new StringBuilder();
+            foreach(var field in KeyFields){
+                if(commaTypes.Contains(field.Type)){
+                    stringBuider.Append($"{field.Nome} = '{field.Value}'\n");
+                }else{
+                    stringBuider.Append($"{field.Nome} = {field.Value}\n");
+                }
+                if (KeyFields.Count > 1){
+                    stringBuider.Append(" and ");
+                }
+            }
+            stringBuider.Append("\n;");
+            return stringBuider.ToString();
+        }
 
         public string BuildUpdate(){
             extractFields(this);
@@ -27,6 +44,9 @@ namespace ModelSQLBuilder
                 }    
             }
             stringBuilder.Append($"\nwhere ");
+            if(KeyFields.Count > 0){
+                stringBuilder.Append(BuildWhere());
+            }
             return stringBuilder.ToString();
         }
 
@@ -35,6 +55,9 @@ namespace ModelSQLBuilder
             getTableName(this);
             var stringBuilder = new StringBuilder("delete");
             stringBuilder.Append($"\nfrom {entity.Nome}\nwhere ");
+            if(KeyFields.Count > 0){
+                stringBuilder.Append(BuildWhere());
+            }
             return stringBuilder.ToString();
         }
 
@@ -83,6 +106,7 @@ namespace ModelSQLBuilder
 
         private void extractFields(Object genericObject){
             fields = new List<Field>();
+            KeyFields = new List<Field>();
             var propertyes = genericObject.GetType().GetProperties();
             foreach(var property in propertyes){
                 var attrs = property.GetCustomAttributes(true);
@@ -93,7 +117,11 @@ namespace ModelSQLBuilder
                     if (field.Value.Equals(PostgreTypes.NULL)){
                         field.Type = PostgreTypes.NULL;
                     }
-                    fields.Add(field);
+                    if(field.IsKey){
+                        KeyFields.Add(field);
+                    }else{
+                        fields.Add(field);
+                    }
                 }
             }
         }

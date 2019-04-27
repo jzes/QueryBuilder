@@ -6,6 +6,10 @@ namespace tests
     [Entity("people_tbl")]
     public class People : ModelBase
     {
+        [Field("cnh_str", PostgreTypes.STRING, true)]
+        public string Document2 {get; set;}
+        [Field("cpf_str", PostgreTypes.STRING, true)]
+        public string Document {get; set;}
         [Field("people_f_name", PostgreTypes.STRING)]
         public string FirstName{get; set;}
 
