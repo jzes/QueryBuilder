@@ -5,6 +5,9 @@ namespace ModelSQLBuilder
     public class DataConverter
     {
         public static string ToStringPostgreFormat(Object objectToConvert){
+            if(objectToConvert == null){
+                return "";
+            }
             var typeObject = objectToConvert.GetType();
             if(objectToConvert is DateTime){
                 return dateTimeConvert(objectToConvert);
@@ -15,6 +18,8 @@ namespace ModelSQLBuilder
                 return objectToConvert.ToString();
             }
         }
+
+        
 
         private static string dateTimeConvert(Object objectToConvert){
             var value = (DateTime)objectToConvert;

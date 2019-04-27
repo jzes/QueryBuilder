@@ -11,6 +11,23 @@ namespace ModelSQLBuilder
         private Entity entity;
         private List<Field> fields;
         private List<string> commaTypes = new List<string>{PostgreTypes.STRING, PostgreTypes.DATETIME};
+        private List<Field> KeyFields;
+
+        public string BuildWhereByKey(){
+            var stringBuilder = new StringBuilder($"\nwhere ");
+            foreach(var field in KeyFields){
+                if(commaTypes.Contains(field.Type)){
+                    stringBuilder.Append($"{field.Nome} = '{field.Value}'");
+                }else{
+                    stringBuilder.Append($"{field.Nome} = {field.Value}");
+                }
+                if (KeyFields.Count > 1 && (!field.Equals(KeyFields.Last()))){
+                    stringBuilder.Append("\nand ");
+                }
+            }
+            stringBuilder.Append(";");
+            return stringBuilder.ToString();
+        }
 
         public string BuildUpdate(){
             extractFields(this);
@@ -26,7 +43,9 @@ namespace ModelSQLBuilder
                     stringBuilder.Append(", \n");
                 }    
             }
-            stringBuilder.Append($"\nwhere ");
+            if(KeyFields.Count > 0){
+                stringBuilder.Append(BuildWhereByKey());
+            }
             return stringBuilder.ToString();
         }
 
@@ -34,7 +53,10 @@ namespace ModelSQLBuilder
             extractFields(this);
             getTableName(this);
             var stringBuilder = new StringBuilder("delete");
-            stringBuilder.Append($"\nfrom {entity.Nome}\nwhere ");
+            stringBuilder.Append($"\nfrom {entity.Nome}");
+            if(KeyFields.Count > 0){
+                stringBuilder.Append(BuildWhereByKey());
+            }
             return stringBuilder.ToString();
         }
 
@@ -51,6 +73,8 @@ namespace ModelSQLBuilder
             stringBuilder.Append($"\nfrom {entity.Nome}");
             return stringBuilder.ToString();
         }
+
+
 
         public string BuildInsert(){
             extractFields(this);
@@ -83,6 +107,7 @@ namespace ModelSQLBuilder
 
         private void extractFields(Object genericObject){
             fields = new List<Field>();
+            KeyFields = new List<Field>();
             var propertyes = genericObject.GetType().GetProperties();
             foreach(var property in propertyes){
                 var attrs = property.GetCustomAttributes(true);
@@ -93,7 +118,11 @@ namespace ModelSQLBuilder
                     if (field.Value.Equals(PostgreTypes.NULL)){
                         field.Type = PostgreTypes.NULL;
                     }
-                    fields.Add(field);
+                    if(field.IsKey){
+                        KeyFields.Add(field);
+                    }else{
+                        fields.Add(field);
+                    }
                 }
             }
         }
