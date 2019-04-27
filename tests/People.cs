@@ -6,8 +6,9 @@ namespace tests
     [Entity("people_tbl")]
     public class People : ModelBase
     {
-        [Field("cnh_str", PostgreTypes.STRING, true)]
-        public string Document2 {get; set;}
+        [Field("id_peopletbl_int", PostgreTypes.INT, true)]
+        public int Id {get; set;}
+        
         [Field("cpf_str", PostgreTypes.STRING, true)]
         public string Document {get; set;}
         [Field("people_f_name", PostgreTypes.STRING)]
@@ -24,5 +25,6 @@ namespace tests
 
         [Field("people_value")]
         public Double Value{get; set;}
+
     }
 }

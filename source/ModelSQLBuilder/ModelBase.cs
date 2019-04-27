@@ -13,20 +13,20 @@ namespace ModelSQLBuilder
         private List<string> commaTypes = new List<string>{PostgreTypes.STRING, PostgreTypes.DATETIME};
         private List<Field> KeyFields;
 
-        private string BuildWhere(){
-            var stringBuider = new StringBuilder();
+        public string BuildWhereByKey(){
+            var stringBuilder = new StringBuilder($"\nwhere ");
             foreach(var field in KeyFields){
                 if(commaTypes.Contains(field.Type)){
-                    stringBuider.Append($"{field.Nome} = '{field.Value}'\n");
+                    stringBuilder.Append($"{field.Nome} = '{field.Value}'");
                 }else{
-                    stringBuider.Append($"{field.Nome} = {field.Value}\n");
+                    stringBuilder.Append($"{field.Nome} = {field.Value}");
                 }
-                if (KeyFields.Count > 1){
-                    stringBuider.Append(" and ");
+                if (KeyFields.Count > 1 && (!field.Equals(KeyFields.Last()))){
+                    stringBuilder.Append("\nand ");
                 }
             }
-            stringBuider.Append("\n;");
-            return stringBuider.ToString();
+            stringBuilder.Append(";");
+            return stringBuilder.ToString();
         }
 
         public string BuildUpdate(){
@@ -43,9 +43,8 @@ namespace ModelSQLBuilder
                     stringBuilder.Append(", \n");
                 }    
             }
-            stringBuilder.Append($"\nwhere ");
             if(KeyFields.Count > 0){
-                stringBuilder.Append(BuildWhere());
+                stringBuilder.Append(BuildWhereByKey());
             }
             return stringBuilder.ToString();
         }
@@ -54,9 +53,9 @@ namespace ModelSQLBuilder
             extractFields(this);
             getTableName(this);
             var stringBuilder = new StringBuilder("delete");
-            stringBuilder.Append($"\nfrom {entity.Nome}\nwhere ");
+            stringBuilder.Append($"\nfrom {entity.Nome}");
             if(KeyFields.Count > 0){
-                stringBuilder.Append(BuildWhere());
+                stringBuilder.Append(BuildWhereByKey());
             }
             return stringBuilder.ToString();
         }
@@ -74,6 +73,8 @@ namespace ModelSQLBuilder
             stringBuilder.Append($"\nfrom {entity.Nome}");
             return stringBuilder.ToString();
         }
+
+
 
         public string BuildInsert(){
             extractFields(this);
