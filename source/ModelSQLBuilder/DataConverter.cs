@@ -19,8 +19,6 @@ namespace ModelSQLBuilder
             }
         }
 
-        
-
         private static string dateTimeConvert(Object objectToConvert){
             var value = (DateTime)objectToConvert;
             var nullSample = new DateTime(0);

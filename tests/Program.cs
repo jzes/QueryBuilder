@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data.Common;
 using Npgsql;
 
@@ -8,34 +9,65 @@ namespace tests
     {
         static void Main(string[] args)
         {
-            var johnDoe = new People();
-            // johnDoe.Id = 156;
-            // johnDoe.FirstName = "John";
-            // johnDoe.LastName = "John";
-            // johnDoe.Contrato = "123456";
-            // johnDoe.Age = 28;
-            // johnDoe.BirdDate = DateTime.Now;
-            // johnDoe.Value = 2300.50;
+            System.Console.WriteLine("+++++++++\nInsert a new row\n");
+            var newPeople = new People();
+            newPeople.Name = "Josef Paul";
+            newPeople.Role = "Manager";
+            newPeople.Document = "125344321";
+            newPeople.CPF = "345345";
+            newPeople.BirthDate = DateTime.Parse("1989-03-05");
 
-            // System.Console.WriteLine(johnDoe.BuildInsert());
-            // System.Console.WriteLine("\n---\n");
-            // System.Console.WriteLine(johnDoe.BuildUpdate());
-            // System.Console.WriteLine("\n---\n");
-            // System.Console.WriteLine(johnDoe.BuildSelect()+johnDoe.BuildWhereByKey());
-            // System.Console.WriteLine("\n---\n");
-            // System.Console.WriteLine(johnDoe.BuildDelete());
-            
-            var con = new NpgsqlConnection("");
-            
-            using(con){
-                con.Open();
-                var comm = new NpgsqlCommand("select * from pessoas limit 10", con);
-                DbDataReader data = comm.ExecuteReader();
-                while(data.Read()){
-                    johnDoe.GetUm(data);
-                    System.Console.WriteLine(johnDoe.Contrato);
-                    System.Console.WriteLine(johnDoe.FirstName);
+            var connection = new NpgsqlConnection("Host=localhost; Port=5432; Database=postgres; Username=postgres; Password=123");
+            using(connection){
+                connection.Open();
+                var command = new NpgsqlCommand(newPeople.BuildInsert(), connection);
+                System.Console.WriteLine(newPeople.BuildInsert());
+                command.ExecuteNonQuery();
+            }
+
+            System.Console.WriteLine("+++++++++\nGet Many rows with manual where\n");
+            connection = new NpgsqlConnection("Host=localhost; Port=5432; Database=postgres; Username=postgres; Password=123");
+            var people = new People();
+            var peoples = new List<People>();
+            using(connection){
+                connection.Open();
+                var command = new NpgsqlCommand(people.BuildSelect()+"where cargo_str = 'Developer'", connection);
+                var data = command.ExecuteReader();
+                peoples = people.GetManyFromDataReader(data);
+            }
+            foreach(var p in peoples){
+                System.Console.WriteLine(p.Name);
+                System.Console.WriteLine(p.Role);
+                System.Console.WriteLine(p.BirthDate.ToString("dd/MM/yyyy"));
+                System.Console.WriteLine("------");
+            }
+
+            System.Console.WriteLine("+++++++++\nGet one row with auto where\n");
+            var johnDoe = new People();
+            johnDoe.Id = 1;
+            connection = new NpgsqlConnection("Host=localhost; Port=5432; Database=postgres; Username=postgres; Password=123");
+            using (connection)
+            {
+                connection.Open();
+                var command = new NpgsqlCommand(johnDoe.BuildSelect() + johnDoe.BuildWhereByKey(), connection);
+                var data = command.ExecuteReader();
+                if (data.Read())
+                {
+                    johnDoe.GetOneFromDataReader(data);
                 }
+            }
+            System.Console.WriteLine(johnDoe.Name);
+            System.Console.WriteLine(johnDoe.Role);
+            System.Console.WriteLine(johnDoe.BirthDate.ToString("dd/MM/yyyy"));
+
+            System.Console.WriteLine("+++++++++\nUpdate one\n");
+            johnDoe.Role = "CEO";
+            connection = new NpgsqlConnection("Host=localhost; Port=5432; Database=postgres; Username=postgres; Password=123");
+            using (connection)
+            {
+                connection.Open();
+                var command = new NpgsqlCommand(johnDoe.BuildUpdate(), connection);
+                command.ExecuteNonQuery();
             }
         }
     }

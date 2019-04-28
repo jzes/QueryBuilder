@@ -15,7 +15,7 @@ namespace ModelSQLBuilder
         private List<Field> KeyFields;
 
 
-        private Object PutValuesInField(Object genericObject, DbDataReader dataReader)
+        private Object LoadModelWithDataReader(Object genericObject, DbDataReader dataReader)
         {
             var propertyes = genericObject.GetType().GetProperties();
             foreach (var property in propertyes)
@@ -32,9 +32,17 @@ namespace ModelSQLBuilder
         }
 
 
-        public T GetUm(DbDataReader dataReader)
+        public void GetOneFromDataReader(DbDataReader dataReader)
         {
-            return (T)PutValuesInField(this, dataReader);
+            LoadModelWithDataReader(this, dataReader);
+        }
+
+        public List<T> GetManyFromDataReader(DbDataReader dataReader){
+            var results = new List<T>();
+            while(dataReader.Read()){
+                results.Add((T)LoadModelWithDataReader(new T(), dataReader));
+            }
+            return results;
         }
 
         public string BuildWhereByKey()
@@ -106,6 +114,8 @@ namespace ModelSQLBuilder
             extractFields(this);
             getTableName(this);
             var stringBuilder = new StringBuilder("select\n");
+            var allfields = fields;
+            allfields.AddRange(KeyFields);
             foreach (var field in fields)
             {
                 stringBuilder.Append($"\t{field.Nome}");
@@ -114,12 +124,9 @@ namespace ModelSQLBuilder
                     stringBuilder.Append(", \n");
                 }
             }
-            stringBuilder.Append($"\nfrom {entity.Nome}");
+            stringBuilder.Append($"\nfrom {entity.Nome} ");
             return stringBuilder.ToString();
         }
-
-
-
         public string BuildInsert()
         {
             extractFields(this);
