@@ -31,13 +31,14 @@ namespace tests
             var peoples = new List<People>();
             using(connection){
                 connection.Open();
-                var command = new NpgsqlCommand(people.BuildSelect()+"where cargo_str = 'Developer'", connection);
+                var command = new NpgsqlCommand(people.BuildSelect()+"where nome_str = 'Jose'", connection);
                 var data = command.ExecuteReader();
                 peoples = people.GetManyFromDataReader(data);
             }
             foreach(var p in peoples){
                 System.Console.WriteLine(p.Name);
                 System.Console.WriteLine(p.Role);
+                System.Console.WriteLine(p.CPF);
                 System.Console.WriteLine(p.BirthDate.ToString("dd/MM/yyyy"));
                 System.Console.WriteLine("------");
             }

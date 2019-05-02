@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <ItemGroup>
-    <ProjectReference Include="..\source\ModelSQLBuilder\QueryBuilder.csproj" />
+    <ProjectReference Include="../source/ModelSQLBuilder/ModelSQLBuilder.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Npgsql" Version="4.0.6" />
