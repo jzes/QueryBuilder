@@ -25,7 +25,9 @@ namespace ModelSQLBuilder
                 {
                     var value = property.GetValue(genericObject);
                     var field = attr as Field;
-                    property.SetValue(genericObject, dataReader[field.Nome]);
+                    try{ //shut up try catch fix that
+                        property.SetValue(genericObject, dataReader[field.Nome]);
+                    }catch(Exception){}
                 }
             }
             return genericObject;
