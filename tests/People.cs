@@ -8,20 +8,25 @@ namespace tests
     {
         [Field("id_cbpessoa", PostgreTypes.INT, true)]
         public int Id {get; set;}
+        
         [Field("nome_str", PostgreTypes.STRING)]
-        public string Name{get; set;}
+        public string FirstName{get; set;}
 
-        [Field("cargo_str", PostgreTypes.STRING)]
-        public string Role {get; set;}
+        [Field("cargo_str", PostgreTypes.STRING, true)]
+        public string Cargo {get; set;}
 
         [Field("cpf_str", PostgreTypes.STRING)]
         public string CPF {get; set;}
 
-        [Field("rg_str",PostgreTypes.DATETIME)]
-        public string Document{get; set;}
+        [Field("rg_str", PostgreTypes.STRING)]
+        public string Documento {get; set;}
 
-        [Field("data_nascimento", PostgreTypes.DATETIME)]
-        public DateTime BirthDate{get; set;}
+        [Field("data_nascimento",PostgreTypes.DATETIME)]
+        public DateTime BirdDate{get; set;}
+
+        [Field("value", PostgreTypes.DOUBLE)]
+        public Double Value{get; set;}
+
 
     }
 }
