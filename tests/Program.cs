@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data.Common;
 using ModelSQLBuilder;
 using Npgsql;
@@ -26,6 +27,7 @@ namespace tests
                 johnDoe.GetOne(data);
             });
             System.Console.WriteLine(johnDoe.FirstName);
+
         }
     }
 }

@@ -15,7 +15,7 @@ namespace ModelSQLBuilder
         private List<Field> KeyFields;
 
 
-        private Object PutValuesInField(Object genericObject, DbDataReader dataReader)
+        private Object LoadModelWithDataReader(Object genericObject, DbDataReader dataReader)
         {
             var propertyes = genericObject.GetType().GetProperties();
             foreach (var property in propertyes)
@@ -33,13 +33,7 @@ namespace ModelSQLBuilder
             return genericObject;
         }
 
-        public List<T> GetMany(DbDataReader dataReader){
-            var records = new List<T>();
-            while (dataReader.Read()){
-                records.Add((T)PutValuesInField(this, dataReader));
-            }
-            return records;
-        }
+
 
         public T GetOne(DbDataReader dataReader)
         {
@@ -47,6 +41,14 @@ namespace ModelSQLBuilder
                 return (T)PutValuesInField(this, dataReader);
             }
             return new T();
+
+        public List<T> GetManyFromDataReader(DbDataReader dataReader){
+            var results = new List<T>();
+            while(dataReader.Read()){
+                results.Add((T)LoadModelWithDataReader(new T(), dataReader));
+            }
+            return results;
+
         }
 
         public string BuildWhereByKey()
@@ -118,6 +120,8 @@ namespace ModelSQLBuilder
             extractFields(this);
             getTableName(this);
             var stringBuilder = new StringBuilder("select\n");
+            var allfields = fields;
+            allfields.AddRange(KeyFields);
             foreach (var field in fields)
             {
                 stringBuilder.Append($"\t{field.Nome}");
@@ -126,12 +130,9 @@ namespace ModelSQLBuilder
                     stringBuilder.Append(", \n");
                 }
             }
-            stringBuilder.Append($"\nfrom {entity.Nome}");
+            stringBuilder.Append($"\nfrom {entity.Nome} ");
             return stringBuilder.ToString();
         }
-
-
-
         public string BuildInsert()
         {
             extractFields(this);

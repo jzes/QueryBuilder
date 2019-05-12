@@ -27,5 +27,6 @@ namespace tests
         [Field("value", PostgreTypes.DOUBLE)]
         public Double Value{get; set;}
 
+
     }
 }
