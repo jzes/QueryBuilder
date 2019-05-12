@@ -25,16 +25,28 @@ namespace ModelSQLBuilder
                 {
                     var value = property.GetValue(genericObject);
                     var field = attr as Field;
-                    property.SetValue(genericObject, dataReader[field.Nome]);
+                    try{
+                        property.SetValue(genericObject, dataReader[field.Nome]);
+                    }catch(IndexOutOfRangeException){}
                 }
             }
             return genericObject;
         }
 
+        public List<T> GetMany(DbDataReader dataReader){
+            var records = new List<T>();
+            while (dataReader.Read()){
+                records.Add((T)PutValuesInField(this, dataReader));
+            }
+            return records;
+        }
 
-        public T GetUm(DbDataReader dataReader)
+        public T GetOne(DbDataReader dataReader)
         {
-            return (T)PutValuesInField(this, dataReader);
+            if (dataReader.Read()){
+                return (T)PutValuesInField(this, dataReader);
+            }
+            return new T();
         }
 
         public string BuildWhereByKey()

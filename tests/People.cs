@@ -3,30 +3,29 @@ using ModelSQLBuilder;
 
 namespace tests
 {
-    [Entity("people_tbl")]
+    [Entity("cbpessoa")]
     public class People : ModelBase<People>
     {
-        // [Field("id_peopletbl_int", PostgreTypes.INT, true)]
-        // public int Id {get; set;}
+        [Field("id_cbpessoa", PostgreTypes.INT, true)]
+        public int Id {get; set;}
         
-        [Field("contrato_str", PostgreTypes.STRING, true)]
-        public string Contrato {get; set;}
-
         [Field("nome_str", PostgreTypes.STRING)]
         public string FirstName{get; set;}
 
+        [Field("cargo_str", PostgreTypes.STRING, true)]
+        public string Cargo {get; set;}
 
-        // [Field("people_age", PostgreTypes.INT)]
-        // public int Age {get; set;}
+        [Field("cpf_str", PostgreTypes.STRING)]
+        public string CPF {get; set;}
 
-        // [Field("people_l_name", PostgreTypes.STRING)]
-        // public string LastName {get; set;}
+        [Field("rg_str", PostgreTypes.STRING)]
+        public string Documento {get; set;}
 
-        // [Field("people_bdate",PostgreTypes.DATETIME)]
-        // public DateTime BirdDate{get; set;}
+        [Field("data_nascimento",PostgreTypes.DATETIME)]
+        public DateTime BirdDate{get; set;}
 
-        // [Field("people_value")]
-        // public Double Value{get; set;}
+        [Field("value", PostgreTypes.DOUBLE)]
+        public Double Value{get; set;}
 
     }
 }
