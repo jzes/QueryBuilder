@@ -20,6 +20,7 @@ namespace tests
 
             var dataAccess = new DataAccess(new NpgsqlConnection(), "Host=localhost; Port=5432; Database=postgres; Username=postgres; Password=2345");
             // dataAccess.ExecuteVoidSQL(new NpgsqlCommand(johnDoe.BuildInsert()));
+            
             System.Console.WriteLine(johnDoe.BuildSelect()+"where 1=0");
             dataAccess.ExecuteSQLStrategy(connection => {
                 var select = new NpgsqlCommand(johnDoe.BuildSelect(), (NpgsqlConnection)connection);

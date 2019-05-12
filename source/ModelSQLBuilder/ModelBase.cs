@@ -15,42 +15,6 @@ namespace ModelSQLBuilder
         private List<Field> KeyFields;
 
 
-        private Object LoadModelWithDataReader(Object genericObject, DbDataReader dataReader)
-        {
-            var propertyes = genericObject.GetType().GetProperties();
-            foreach (var property in propertyes)
-            {
-                var attrs = property.GetCustomAttributes(true);
-                foreach (var attr in attrs)
-                {
-                    var value = property.GetValue(genericObject);
-                    var field = attr as Field;
-                    try{
-                        property.SetValue(genericObject, dataReader[field.Nome]);
-                    }catch(IndexOutOfRangeException){}
-                }
-            }
-            return genericObject;
-        }
-
-
-
-        public T GetOne(DbDataReader dataReader)
-        {
-            if (dataReader.Read()){
-                return (T)PutValuesInField(this, dataReader);
-            }
-            return new T();
-
-        public List<T> GetManyFromDataReader(DbDataReader dataReader){
-            var results = new List<T>();
-            while(dataReader.Read()){
-                results.Add((T)LoadModelWithDataReader(new T(), dataReader));
-            }
-            return results;
-
-        }
-
         public string BuildWhereByKey()
         {
             var stringBuilder = new StringBuilder($"\nwhere ");
@@ -72,8 +36,6 @@ namespace ModelSQLBuilder
             stringBuilder.Append(";");
             return stringBuilder.ToString();
         }
-
-
 
         public string BuildUpdate()
         {
@@ -133,6 +95,7 @@ namespace ModelSQLBuilder
             stringBuilder.Append($"\nfrom {entity.Nome} ");
             return stringBuilder.ToString();
         }
+
         public string BuildInsert()
         {
             extractFields(this);
@@ -164,6 +127,48 @@ namespace ModelSQLBuilder
             }
             stringBuilder.Append("\n);\n");
             return stringBuilder.ToString();
+        }
+
+        public T GetOne(DbDataReader dataReader)
+        {
+            if (dataReader.Read())
+            {
+                return (T)LoadModelWithDataReader(this, dataReader);
+            }
+            return new T();
+        }
+
+        public List<T> GetManyFromDataReader(DbDataReader dataReader)
+        {
+            var results = new List<T>();
+            while (dataReader.Read())
+            {
+                results.Add((T)LoadModelWithDataReader(new T(), dataReader));
+            }
+            return results;
+        }
+
+        private Object LoadModelWithDataReader(Object genericObject, DbDataReader dataReader)
+        {
+            var propertyes = genericObject.GetType().GetProperties();
+            foreach (var property in propertyes)
+            {
+                var attrs = property.GetCustomAttributes(true);
+                foreach (var attr in attrs)
+                {
+                    var value = property.GetValue(genericObject);
+                    var field = attr as Field;
+                    if (dataReader[field.Nome] != DBNull.Value)
+                    {
+                        try
+                        {
+                            property.SetValue(genericObject, dataReader[field.Nome]);
+                        }
+                        catch (IndexOutOfRangeException) { }
+                    }
+                }
+            }
+            return genericObject;
         }
 
         private void getTableName(Object genericObject)
