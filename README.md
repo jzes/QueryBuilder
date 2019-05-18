@@ -1,6 +1,6 @@
 # ModelSQLBuilder
 
-ModelSQLBuilder facilita o uso de banco de dados sem o uso de um ORM
+ModelSQLBuilder facilita o uso de banco de dados sem o uso de um ORM.
 
 ## Principais caracteristicas
 
@@ -16,9 +16,9 @@ Nestes casos o mais comum é fazer o acesso escrevendo as querys manualmente e a
 
 ## Como Utilizar
 
-Um pacote do [nuget](https://www.nuget.org/packages/ModelSQLBuilder/) esta disponível para download e uso em qualquer projeto C#, podendo ser encontrado através da ferramenta do visual studio, bem como através do comando do CLI do .net core.
+Um pacote do [nuget](https://www.nuget.org/packages/ModelSQLBuilder/)]   esta disponível para download e uso em qualquer projeto C#, podendo ser encontrado através da ferramenta do visual studio, bem como através do comando do CLI do .net core.
 
-Para iniciar o uso é necessário a criação de uma classe que sirva como modelo de dados para a implementação como por exemplo
+Para iniciar o uso é necessário a criação de uma classe que sirva como modelo de dados para a implementação como por exemplo.
 
 ```c#
     public class People
@@ -62,7 +62,7 @@ Para iniciar o uso é necessário a criação de uma classe que sirva como model
     }
 ```
 
-O que fizemos aqui foi adicionar alguns atributos e adicionar uma herança de `ModelBase<T> onde  
+O que fizemos aqui foi adicionar alguns atributos e adicionar uma herança de `ModelBase<T> onde.
 
 `T` é a nossa própria classe, dessa forma estamos dizendo a biblioteca qual o formato de dados estamos esperando na saida.
 
@@ -78,4 +78,53 @@ Este atributo é mais complexo, ele pode receber até três parâmetros, em orde
 
 - Nome.: O nome do campo assim como ele é no banco de dados na tabela em questão
 - Tipo.: O tipo do campo é uma sinalização onde o tipo do objeto em C# é sinalizado para a biblioteca através das constantes que a mesma disponibiliza, realizando assim uma "tradução" de tipos para os tipos do banco de dados
-- Chave.: Caso queira usar o campo como chave para esta tabela, independentemente de ele ser ou não uma `Primary Key` no banco de dados esse parâmetro pode ser `True`
+- Chave.: Caso queira usar o campo como chave para esta tabela, independentemente de ele ser ou não uma `Primary Key` no banco de dados esse parâmetro deve ser `true`, caso contrário, pode ser omitido
+
+Com a nossa classe preparada para representar uma tabela nós podemos começar a usufruir dos métodos que temos disponíveis no nosso `ModelBase`. 
+
+Podemos dividir a biblioteca em dois grupos, um grupo para abstrair o código SQL e outro para lidar com conexões, tratando-as automaticamente dentro de transações com `using` .
+
+### Abstraindo o SQL
+
+Através dos métodos implementados no `ModelBase` podemos abstrair o código SQL conforme o exemplo abaixo. 
+
+```c#
+    static void Main(string[] args)
+    {
+        var johnDoe = new People();
+        johnDoe.Id = 156;
+        johnDoe.FirstName = "John";
+        johnDoe.Document = "12345678";
+        johnDoe.CPF = "123456";
+        johnDoe.BirdDate = DateTime.Now;
+        johnDoe.Value = 2300.50;
+    
+        System.Console.WriteLine(johnDoe.BuildSelect());
+        System.Console.WriteLine(johnDoe.BuildUpdate());
+        System.Console.WriteLine(johnDoe.BuildWhereByKey());
+        System.Console.WriteLine(johnDoe.BuildInsert());
+        System.Console.WriteLine(johnDoe.BuildDelete());
+    }
+```
+
+Através dos métodos apresentados acima temos acesso a `string` que representa o comando SQL desta forma podemos executa-lo utilizando qualquer biblioteca que queiramos.
+
+Vamos analisar cada método independentemente.
+
+### BuildSelect
+
+Esse método retorna a `string` do comando `select` sem `where`, caso seja preciso selecionar dados utilizando a chave como valor comparativo pode-se usar o método `BuildWhereByKey` que será explicado em detalhes mais adiante, caso seja preciso um `where` mais complexo o mesmo pode ser concatenado de dentro de uma string à saída do método.
+
+Saída do método
+
+```sql
+    select
+    	nome_str, 
+    	cpf_str, 
+    	rg_str, 
+    	data_nascimento, 
+    	value, 
+    	id_cbpessoa, 
+    	cargo_str
+    from cbpessoa
+```

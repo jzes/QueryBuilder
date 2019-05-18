@@ -19,7 +19,7 @@ namespace tests
         public string CPF {get; set;}
 
         [Field("rg_str", PostgreTypes.STRING)]
-        public string Documento {get; set;}
+        public string Document {get; set;}
 
         [Field("data_nascimento",PostgreTypes.DATETIME)]
         public DateTime BirdDate{get; set;}
