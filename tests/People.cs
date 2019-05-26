@@ -12,7 +12,7 @@ namespace tests
         [Field("nome_str", PostgreTypes.STRING)]
         public string FirstName{get; set;}
 
-        [Field("cargo_str", PostgreTypes.STRING, true)]
+        [Field("cargo_str", PostgreTypes.STRING)]
         public string Cargo {get; set;}
 
         [Field("cpf_str", PostgreTypes.STRING)]

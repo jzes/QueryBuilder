@@ -45,7 +45,7 @@ Para iniciar o uso é necessário a criação de uma classe que sirva como model
         [Field("nome_str", PostgreTypes.STRING)]
         public string FirstName{get; set;}
     
-        [Field("cargo_str", PostgreTypes.STRING, true)]
+        [Field("cargo_str", PostgreTypes.STRING)]
         public string Role{get; set;}
     
         [Field("cpf_str", PostgreTypes.STRING)]
@@ -127,4 +127,68 @@ Saída do método
     	id_cbpessoa, 
     	cargo_str
     from cbpessoa
+```
+
+### BuildUpdate
+
+Esse método retorna a `string` do comando `update` contendo na cláusula `where` uma comparação de igualdade pelo campo determinado como chave no atributo field na classe que representa a tabela, caso seja preciso, embora não aconcelhável, é simples adicionar cláusulas ao where concatenando `strings`, bem como remover.
+
+Saída do método
+
+```sql
+    update cbpessoa set
+    	nome_str = 'John', 
+    	cargo_str = '', 
+    	cpf_str = '123456', 
+    	rg_str = '12345678', 
+    	data_nascimento = '2019-05-25 10:37:04', 
+    	value = 2300.5
+    where id_cbpessoa = 156;
+```
+
+### BuildWhereByKey
+
+Este método constrói e retorna uma cláusula `where` simples através dos campos marcados como chave nos atributos da classe que representa a tabela em questão. Caso mais de um campo seja marcado como chave, mais condições serão acrescentadas à cláusula `where` utilizando o operador lógico `and` .
+
+Saída do método
+
+```sql
+    where id_cbpessoa = 156;
+```
+
+### BuildInsert
+
+Constrói e retorna um comando de `insert` com os campos presentes na classe. Vale ressaltar que os campos marcados como chave não serão retornados no `insert`.
+
+Saída do método
+
+```sql
+
+    insert into cbpessoa (
+    	nome_str, 
+    	cargo_str, 
+    	cpf_str, 
+    	rg_str, 
+    	data_nascimento, 
+    	value
+    ) values (
+    	'John', 
+    	'', 
+    	'123456', 
+    	'12345678', 
+    	'2019-05-25 10:37:04', 
+    	2300.5
+    );
+```
+
+### BuildDelete
+
+Monta um comando de `delete` com `where` seguindo as mesmas regras do método `BuildWhereByKey` 
+
+Saída do método
+
+```sql
+    delete
+    from cbpessoa
+    where id_cbpessoa = 156;
 ```
